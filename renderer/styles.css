@@ -40,7 +40,7 @@
   table {
     width: 100%;
     /* border-collapse: collapse; */
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     background: white;
   }
 
@@ -48,7 +48,6 @@
     border: 1px solid #ccc;
     padding: 8px 10px;
     text-align: center;
-    width: 266px;
   }
 
   tr:nth-child(even) {
@@ -56,7 +55,7 @@
   }
 
   .send-btn {
-    margin-top: 10px;
+    margin-right: 4px;
     float: right;
   }
 
@@ -95,3 +94,24 @@
   .cabecalho {
     background-color: #43f5ec;
   }
+
+  .label {
+    width: 120px;
+  }
+
+  .bin {
+    width: 310px;
+  }
+
+  .hex {
+    width: 100px;
+  }
+
+  .data {
+    width: 398px;
+  }
+
+  .SDI, .SSM {
+    width: 76px;
+  }
+  

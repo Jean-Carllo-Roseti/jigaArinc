@@ -19,39 +19,42 @@
             <thead>
               <tr class="cabecalho">
                 <th class="label">Label</th>
-                <th>Binário</th>
-                <th>Hexa</th>
-                <th>Decimal</th>
-                
+                <th class="parity">Parity</th>
+                <th class="SSM">SSM</th>
+                <th class="data">Data</th>
+                <th class="SDI">SDI</th>
+                <th class="hex">Hexa</th>
+                <th class="decimal">Decimal</th>
               </tr>
             </thead>
-            <tbody>
-                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
-                <tr><td>203</td><td >00011010101010101011</td><td>f0DA</td><td>44</td></tr>
-                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
-                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
-                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
-                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
-                <tr><td>213</td><td >00011010101010101011</td><td>f0DA</td><td>55</td></tr>
-              <!-- Linhas inseridas via JS -->
+            <tbody id="data-table-body">
+              <!-- <tr id="label-131"><td>203</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr id="label-204"><td>204</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr id="label-205"><td>205</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr id="label-206"><td>206</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr id="label-207"><td>207</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr id="label-210"><td>210</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr id="label-211"><td>211</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>           -->
             </tbody>
           </table>
-    
           <h2>📤 Enviar Mensagens ARINC</h2>
           <table id="send-table">
             <thead>
               <tr class="cabecalho">
                 <th class="label">Label</th>
-                <th>Binário</th>
-                <th>Hexa</th>
-                <th>Decimal</th>
+                <th class="parity">Parity</th>
+                <th class="SSM">SSM</th>
+                <th class="data">Data</th>
+                <th class="SDI">SDI</th>
+                <th class="hex">Hexa</th>
+                <th class="decimal">Decimal</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>134</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td></tr>
-              <tr><td>203</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td></tr>
-              <tr><td>213</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td></tr>
-              <tr><td>333</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td></tr>
+              <tr><td>134</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td></tr>
+              <tr><td>203</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td></tr>
+              <tr><td>213</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td></tr>
+              <tr><td>333</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td></tr>
             </tbody>
           </table>
           <button class="send-btn" id="send-btn">Enviar</button>

@@ -26,30 +26,63 @@
 // });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const portSelect = document.getElementById('port-select'); // Dropdown de seleção de porta
+  const portSelect = document.getElementById('port-select');
 
-  // Escutando a emissão de portas disponíveis do processo principal
+  // Escutando a emissão de portas disponíveis
   window.serial.onAvailablePorts((event, ports) => {
-    // Limpa as opções existentes antes de adicionar novas
     portSelect.innerHTML = '';
 
-    // Cria e adiciona as novas opções no dropdown
     ports.forEach(port => {
       const option = document.createElement('option');
-      option.value = port.path;  // Valor da porta
-      option.textContent = port.path;  // Nome da porta
-      portSelect.appendChild(option);  // Adiciona ao dropdown
+      option.value = port.path;
+      option.textContent = port.path;
+      portSelect.appendChild(option);
     });
   });
 
-  // Escutando a mudança na seleção da porta
+  // Escutando mudança na seleção da porta
   portSelect.addEventListener('change', () => {
     const selectedPort = portSelect.value;
-    
+
     if (selectedPort) {
-      window.serial.openSerialPort(selectedPort); // Envia a porta selecionada para o main.js
+      window.serial.openSerialPort(selectedPort);
     } else {
       console.error('Nenhuma porta selecionada!');
     }
   });
+
+  // Recebendo dados decodificados
+  window.addEventListener('decoded-data', (event) => {
+    const data = event.detail;
+    const tableBody = document.getElementById('data-table-body');
+    const existingRow = document.getElementById(`row-${data.label}`);
+  
+    if (existingRow) {
+      existingRow.innerHTML = `
+        <td>${data.label}</td>
+        <td>${data.parity}</td>
+        <td>${data.ssm}</td>
+        <td>${data.data}</td>
+        <td>${data.sdi}</td>        
+        <td>${data.hex}</td>
+        <td>${data.decimal}</td>
+      `;
+      existingRow.classList.add('highlight');
+      setTimeout(() => existingRow.classList.remove('highlight'), 300);
+    } else {
+      const newRow = document.createElement('tr');
+      newRow.id = `row-${data.label}`;
+      newRow.innerHTML = `
+        <td>${data.label}</td>
+        <td>${data.parity}</td>
+        <td>${data.ssm}</td>
+        <td>${data.data}</td>
+        <td>${data.sdi}</td>        
+        <td>${data.hex}</td>
+        <td>${data.decimal}</td>
+      `;
+      tableBody.appendChild(newRow);
+    }
+  });  
 });
+
