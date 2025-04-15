@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arinc Jiga</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+          <div class="top-bar">
+            <select id="port-select"></select>
+            <button id="connect-btn">Connect</button>
+          </div>
+    
+          <h2>📥 Mensagens Recebidas</h2>
+          <table id="received-table">
+            <thead>
+              <tr class="cabecalho">
+                <th class="label">Label</th>
+                <th>Binário</th>
+                <th>Hexa</th>
+                <th>Decimal</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
+                <tr><td>203</td><td >00011010101010101011</td><td>f0DA</td><td>44</td></tr>
+                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
+                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
+                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
+                <tr><td>134</td><td >00011010101010101011</td><td>f0DA</td><td>33</td></tr>
+                <tr><td>213</td><td >00011010101010101011</td><td>f0DA</td><td>55</td></tr>
+              <!-- Linhas inseridas via JS -->
+            </tbody>
+          </table>
+    
+          <h2>📤 Enviar Mensagens ARINC</h2>
+          <table id="send-table">
+            <thead>
+              <tr class="cabecalho">
+                <th class="label">Label</th>
+                <th>Binário</th>
+                <th>Hexa</th>
+                <th>Decimal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>134</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td></tr>
+              <tr><td>203</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td></tr>
+              <tr><td>213</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td></tr>
+              <tr><td>333</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td></tr>
+            </tbody>
+          </table>
+          <button class="send-btn" id="send-btn">Enviar</button>
+        </div>
+    
+        <div class="sidebar">
+          <h3>📋 Log</h3>
+          <div id="log-container">
+            <!-- Logs inseridos aqui via JS -->
+            <div class="log-entry">[INFO] Interface iniciada.</div>
+          </div>
+        </div>
+      </div>
+      <script src="renderer.js"></script>
+    </div>
+</body>
+
+
+
+
+
+
+
+
+
+

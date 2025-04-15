@@ -1,7 +1,7 @@
 {
   "name": "jigaarinc",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
@@ -11,7 +11,8 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "electorn": "^0.0.1-security"
+    "electron": "^23.0.0",
+    "sass": "^1.86.3"
   },
   "dependencies": {
     "serialport": "^13.0.0"
