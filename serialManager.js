@@ -23,36 +23,49 @@ function reverseBits32(n) {
 
 function sendMockDataToFrontend() {
   mockARINCData.forEach((data) => {
-    const binaryString = data.binary; // Binário vindo do mock
-    const reversed = reverseBits32(parseInt(binaryString, 2)); // Inverte os bits
+    const binaryString = data.binary;
+    const reversed = reverseBits32(parseInt(binaryString, 2));
 
-    const label = (reversed >> 24) & 0xFF; // 🟢 Define o label corretamente
+    const label = (reversed >> 24) & 0xFF;
     const sdi = (reversed >> 22) & 0x03;
-    const dataField = (reversed >> 3) & 0x1FFFFF;
+    const dataField = (reversed >> 3) & 0x7FFFF;
     const ssm = (reversed >> 1) & 0x03;
     const parity = reversed & 0x01;
 
-    const hex = reversed.toString(16).toUpperCase().padStart(8, '0');
+    // Representações binárias
+    const labelBin = label.toString(2).padStart(8, '0');
+    const sdiBin = sdi.toString(2).padStart(2, '0');
+    const dataBin = dataField.toString(2).padStart(19, '0');
+    const ssmBin = ssm.toString(2).padStart(2, '0');
+    const parityBin = parity.toString(2); // 1 bit
+
+    const formattedBinary = `${parityBin} ${ssmBin} ${dataBin} ${sdiBin} ${labelBin}`;
+    const hex = dataField.toString(16).toUpperCase().padStart(6, '0');
     const decimal = dataField;
 
     console.log(`--- Palavra ARINC 429 recebida para o Label ${label} ---`);
     console.log(`Binário (32 bits): ${binaryString}`);
+    console.log(`Formatado: ${formattedBinary}`);
     console.log(`Label (octal): ${label.toString(8).padStart(3, '0')}`);
-    console.log(`SDI: ${sdi}`);
-    console.log(`Data: ${dataField}`);
-    console.log(`SSM: ${ssm}`);
+    console.log(`SDI: ${sdi} (${sdiBin})`);
+    console.log(`Data: ${dataField} (${dataBin})`);
+    console.log(`SSM: ${ssm} (${ssmBin})`);
     console.log(`Parity: ${parity}`);
     console.log();
 
-    // Envia para o frontend
     if (mainWindow && mainWindow.webContents) {
       mainWindow.webContents.send('decoded-data', {
         label: label.toString(8).padStart(3, '0'),
+        labelBin,
         sdi,
+        sdiBin,
         data: dataField,
+        dataBin,
         ssm,
+        ssmBin,
         parity,
-        binary: binaryString,
+        parityBin,
+        binary: formattedBinary,
         hex,
         decimal
       });
@@ -61,6 +74,7 @@ function sendMockDataToFrontend() {
     }
   });
 }
+
 
 // Simula a recepção de dados a cada 2 segundos, como exemplo
 setInterval(sendMockDataToFrontend, 2000); 

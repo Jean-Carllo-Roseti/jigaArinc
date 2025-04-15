@@ -60,10 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (existingRow) {
       existingRow.innerHTML = `
         <td>${data.label}</td>
-        <td>${data.parity}</td>
-        <td>${data.ssm}</td>
-        <td>${data.data}</td>
-        <td>${data.sdi}</td>        
+        <td>${data.parityBin}</td>
+        <td>${data.ssmBin}</td>
+        <td>${data.dataBin}</td>
+        <td>${data.sdiBin}</td>        
         <td>${data.hex}</td>
         <td>${data.decimal}</td>
       `;
@@ -73,11 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const newRow = document.createElement('tr');
       newRow.id = `row-${data.label}`;
       newRow.innerHTML = `
-        <td>${data.label}</td>
-        <td>${data.parity}</td>
-        <td>${data.ssm}</td>
-        <td>${data.data}</td>
-        <td>${data.sdi}</td>        
+       <td>${data.label}</td>
+        <td>${data.parityBin}</td>
+        <td>${data.ssmBin}</td>
+        <td>${data.dataBin}</td>
+        <td>${data.sdiBin}</td>        
         <td>${data.hex}</td>
         <td>${data.decimal}</td>
       `;
