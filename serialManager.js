@@ -41,7 +41,26 @@ function sendMockDataToFrontend() {
 
     const formattedBinary = `${parityBin} ${ssmBin} ${dataBin} ${sdiBin} ${labelBin}`;
     const hex = dataField.toString(16).toUpperCase().padStart(6, '0');
-    const decimal = dataField;
+
+    let decimal = dataField; // valor padrão
+
+    // 🔁 Condição especial para labels 266 (octal 412) e 267 (octal 413)
+    if (label === 182 || label === 183) {
+      // Posição de bits no campo dataField (bits 11 a 18 no total)
+      const unidadesBits = dataBin.slice(4, 8); // bits 11 a 14 (índice 4 a 7)
+      const dezenasBits = dataBin.slice(0, 4);  // bits 15 a 18 (índice 0 a 3)
+
+      const unidades = parseInt(unidadesBits, 2);
+      const dezenas = parseInt(dezenasBits, 2);
+
+      decimal = dezenas * 10 + unidades;
+
+      console.log(`Label especial: ${label} (octal ${label.toString(8)})`);
+      console.log(`Bits (dataBin): ${dataBin}`);
+      console.log(`Bits dezenas (0–3): ${dezenasBits} => ${dezenas}`);
+      console.log(`Bits unidades (4–7): ${unidadesBits} => ${unidades}`);
+      console.log(`Decimal final (dez * 10 + uni): ${decimal}`);
+    }
 
     console.log(`--- Palavra ARINC 429 recebida para o Label ${label} ---`);
     console.log(`Binário (32 bits): ${binaryString}`);
@@ -67,13 +86,14 @@ function sendMockDataToFrontend() {
         parityBin,
         binary: formattedBinary,
         hex,
-        decimal
+        decimal // já atualizado se for 266 ou 267
       });
     } else {
       console.warn('mainWindow ou webContents não estão prontos.');
     }
   });
 }
+
 
 
 // Simula a recepção de dados a cada 2 segundos, como exemplo

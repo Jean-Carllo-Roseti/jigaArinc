@@ -1,7 +1,7 @@
 // mockData.js mudança de label os primeiros bits, direita, a mensagem vai ser invertida, procolo arinc*
 const mockARINCData = [
     {
-      binary: '101101101100110011001100001101101', 
+      binary: '101101101100110100110011001101101', // 10110110 = 266
       timestamp: Date.now() 
     },  
     {
