@@ -10,7 +10,9 @@
     <div class="container">
         <div class="main-content">
           <div class="top-bar">
-            <select id="port-select"></select>
+            <select id="port-select">
+              <option>Carregando...</option>
+            </select>
             <button id="connect-btn">Connect</button>
           </div>
     
@@ -28,13 +30,6 @@
               </tr>
             </thead>
             <tbody id="data-table-body">
-              <!-- <tr id="label-131"><td>203</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-              <tr id="label-204"><td>204</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-              <tr id="label-205"><td>205</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-              <tr id="label-206"><td>206</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-              <tr id="label-207"><td>207</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-              <tr id="label-210"><td>210</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-              <tr id="label-211"><td>211</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>           -->
             </tbody>
           </table>
           <h2>📤 Enviar Mensagens ARINC</h2>
@@ -60,11 +55,12 @@
           <button class="send-btn" id="send-btn">Enviar</button>
         </div>
     
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
           <h3>📋 Log</h3>
           <div id="log-container">
-            <!-- Logs inseridos aqui via JS -->
             <div class="log-entry">[INFO] Interface iniciada.</div>
+            <div id="label-270-container" class="log-block"></div>
+            <div id="label-271-container" class="log-block"></div>
           </div>
         </div>
       </div>

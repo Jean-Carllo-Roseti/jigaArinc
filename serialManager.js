@@ -1,157 +1,179 @@
-const { mockARINCData } = require('./mockData');   // Importando os dados mock
-const { SerialPort } = require('serialport');
+// const { mockARINCData } = require('./mockData');   // Importando os dados mock
+// const { SerialPort } = require('serialport');
+// const mensagensLabel270 = require('./mensagensLabel270');
+// const mensagensLabel271 = require('./mensagensLabel271');
 
-let mainWindow = null;
+// let mainWindow = null;
 
-function setMainWindow(win) {
-  mainWindow = win;
-}
+// function setMainWindow(win) {
+//   mainWindow = win;
+// }
 
-let port = null;
-let buffer = Buffer.alloc(0);
-let labelBuffers = {};
+// let port = null;
+// let buffer = Buffer.alloc(0);
+// let labelBuffers = {};
 
-function reverseBits32(n) {
-  let rev = 0;
-  for (let i = 0; i < 32; i++) {
-    rev <<= 1;
-    rev |= n & 1;
-    n >>>= 1;
-  }
-  return rev >>> 0;
-}
+// function reverseBits32(n) {
+//   let rev = 0;
+//   for (let i = 0; i < 32; i++) {
+//     rev <<= 1;
+//     rev |= n & 1;
+//     n >>>= 1;
+//   }
+//   return rev >>> 0;
+// }
 
-function sendMockDataToFrontend() {
-  mockARINCData.forEach((data) => {
-    const binaryString = data.binary;
-    const reversed = reverseBits32(parseInt(binaryString, 2));
+// function processBitwiseAlerts(label, dataBin, mensagens, canal) {
+//   [...dataBin].forEach((bit, index) => {
+//     if (bit === '1') {
+//       const mensagem = mensagens[index];
+//       if (mensagem && mainWindow?.webContents) {
+//         mainWindow.webContents.send(canal, { bit: index, mensagem });
+//         // console.log(`🔔 ${mensagem}`);
+//       }
+//     }
+//   });
+// }
 
-    const label = (reversed >> 24) & 0xFF;
-    const sdi = (reversed >> 22) & 0x03;
-    const dataField = (reversed >> 3) & 0x7FFFF;
-    const ssm = (reversed >> 1) & 0x03;
-    const parity = reversed & 0x01;
+// function dispatchAlertsIfNeeded(label, dataBin) {
+//   if (label === 184) {
+//     processBitwiseAlerts(label, dataBin, mensagensLabel270, 'label-270-alert');
+//   } else if (label === 185) {
+//     processBitwiseAlerts(label, dataBin, mensagensLabel271, 'label-271-alert');
+//   }
+// }
 
-    // Representações binárias
-    const labelBin = label.toString(2).padStart(8, '0');
-    const sdiBin = sdi.toString(2).padStart(2, '0');
-    const dataBin = dataField.toString(2).padStart(19, '0');
-    const ssmBin = ssm.toString(2).padStart(2, '0');
-    const parityBin = parity.toString(2); // 1 bit
+// function sendMockDataToFrontend() {
+//   mockARINCData.forEach((data) => {
+//     const binaryString = data.binary.padStart(32, '0'); // Garantir 32 bits;
+//     const reversed = reverseBits32(parseInt(binaryString, 2));
 
-    const formattedBinary = `${parityBin} ${ssmBin} ${dataBin} ${sdiBin} ${labelBin}`;
-    const hex = dataField.toString(16).toUpperCase().padStart(6, '0');
+//     const label = (reversed >> 24) & 0xFF;
+//     const sdi = (reversed >> 22) & 0x03;
+//     const dataField = (reversed >> 3) & 0x7FFFF;
+//     const ssm = (reversed >> 1) & 0x03;
+//     const parity = reversed & 0x01;
 
-    let decimal = dataField; // valor padrão
+//     // Representações binárias
+//     const labelBin = label.toString(2).padStart(8, '0');
+//     const sdiBin = sdi.toString(2).padStart(2, '0');
+//     const dataBin = dataField.toString(2).padStart(19, '0');
+//     const ssmBin = ssm.toString(2).padStart(2, '0');
+//     const parityBin = parity.toString(2); // 1 bit
 
-    // 🔁 Condição especial para labels 266 (octal 412) e 267 (octal 413)
-    if (label === 182 || label === 183) {
-      // Posição de bits no campo dataField (bits 11 a 18 no total)
-      const unidadesBits = dataBin.slice(4, 8); // bits 11 a 14 (índice 4 a 7)
-      const dezenasBits = dataBin.slice(0, 4);  // bits 15 a 18 (índice 0 a 3)
+//     const formattedBinary = `${parityBin} ${ssmBin} ${dataBin} ${sdiBin} ${labelBin}`;
+//     const hex = dataField.toString(16).toUpperCase().padStart(6, '0');
 
-      const unidades = parseInt(unidadesBits, 2);
-      const dezenas = parseInt(dezenasBits, 2);
+//     let decimal = dataField; // valor padrão
 
-      decimal = dezenas * 10 + unidades;
+//     dispatchAlertsIfNeeded(label, dataBin);
 
-      console.log(`Label especial: ${label} (octal ${label.toString(8)})`);
-      console.log(`Bits (dataBin): ${dataBin}`);
-      console.log(`Bits dezenas (0–3): ${dezenasBits} => ${dezenas}`);
-      console.log(`Bits unidades (4–7): ${unidadesBits} => ${unidades}`);
-      console.log(`Decimal final (dez * 10 + uni): ${decimal}`);
-    }
+//     // 🔁 Condição especial para labels 266 (octal 412) e 267 (octal 413)
+//     if (label === 182 || label === 183) {
+//       // Posição de bits no campo dataField (bits 11 a 18 no total)
+//       const unidadesBits = dataBin.slice(4, 8); // bits 11 a 14 (índice 4 a 7)
+//       const dezenasBits = dataBin.slice(0, 4);  // bits 15 a 18 (índice 0 a 3)
 
-    console.log(`--- Palavra ARINC 429 recebida para o Label ${label} ---`);
-    console.log(`Binário (32 bits): ${binaryString}`);
-    console.log(`Formatado: ${formattedBinary}`);
-    console.log(`Label (octal): ${label.toString(8).padStart(3, '0')}`);
-    console.log(`SDI: ${sdi} (${sdiBin})`);
-    console.log(`Data: ${dataField} (${dataBin})`);
-    console.log(`SSM: ${ssm} (${ssmBin})`);
-    console.log(`Parity: ${parity}`);
-    console.log();
+//       const unidades = parseInt(unidadesBits, 2);
+//       const dezenas = parseInt(dezenasBits, 2);
 
-    if (mainWindow && mainWindow.webContents) {
-      mainWindow.webContents.send('decoded-data', {
-        label: label.toString(8).padStart(3, '0'),
-        labelBin,
-        sdi,
-        sdiBin,
-        data: dataField,
-        dataBin,
-        ssm,
-        ssmBin,
-        parity,
-        parityBin,
-        binary: formattedBinary,
-        hex,
-        decimal // já atualizado se for 266 ou 267
-      });
-    } else {
-      console.warn('mainWindow ou webContents não estão prontos.');
-    }
-  });
-}
+//       decimal = dezenas * 10 + unidades;
 
+      // console.log(`Label especial: ${label} (octal ${label.toString(8)})`);
+      // console.log(`Bits (dataBin): ${dataBin}`);
+      // console.log(`Bits dezenas (0–3): ${dezenasBits} => ${dezenas}`);
+      // console.log(`Bits unidades (4–7): ${unidadesBits} => ${unidades}`);
+      // console.log(`Decimal final (dez * 10 + uni): ${decimal}`);
+    // }
 
+    // console.log(`--- Palavra ARINC 429 recebida para o Label ${label} ---`);
+    // console.log(`Binário (32 bits): ${binaryString}`);
+    // console.log(`Formatado: ${formattedBinary}`);
+    // console.log(`Label (octal): ${label.toString(8).padStart(3, '0')}`);
+    // console.log(`SDI: ${sdi} (${sdiBin})`);
+    // console.log(`Data: ${dataField} (${dataBin})`);
+    // console.log(`SSM: ${ssm} (${ssmBin})`);
+    // console.log(`Parity: ${parity}`);
+    // console.log();
 
-// Simula a recepção de dados a cada 2 segundos, como exemplo
-setInterval(sendMockDataToFrontend, 2000); 
+//     if (mainWindow && mainWindow.webContents) {
+//       mainWindow.webContents.send('decoded-data', {
+//         label: label.toString(8).padStart(3, '0'),
+//         labelBin,
+//         sdi,
+//         sdiBin,
+//         data: dataField,
+//         dataBin,
+//         ssm,
+//         ssmBin,
+//         parity,
+//         parityBin,
+//         binary: formattedBinary,
+//         hex,
+//         decimal // já atualizado se for 266 ou 267
+//       });
+//     } else {
+//       console.warn('mainWindow ou webContents não estão prontos.');
+//     }
+//   });
+// }
 
-function openPort(selectedPort) {
-  if (port && port.isOpen) {
-    port.close();
-  }
+// // Simula a recepção de dados a cada 2 segundos, como exemplo
+// setInterval(sendMockDataToFrontend, 2000); 
 
-  port = new SerialPort({
-    path: selectedPort,
-    baudRate: 115200
-  });
+// function openPort(selectedPort) {
+//   if (port && port.isOpen) {
+//     port.close();
+//   }
 
-  port.on('open', () => {
-    console.log('Porta serial aberta:', selectedPort);
-  });
+//   port = new SerialPort({
+//     path: selectedPort,
+//     baudRate: 115200
+//   });
 
-  port.on('data', (data) => {
-    buffer = Buffer.concat([buffer, data]);
+//   port.on('open', () => {
+//     console.log('Porta serial aberta:', selectedPort);
+//   });
 
-    while (buffer.length >= 4) {
-      const word = buffer.slice(0, 4);
-      buffer = buffer.slice(4);
+//   port.on('data', (data) => {
+//     buffer = Buffer.concat([buffer, data]);
 
-      const rawValue = word.readUInt32BE();
-      const reversed = reverseBits32(rawValue);
-      const label = (reversed >> 24) & 0xFF;
+//     while (buffer.length >= 4) {
+//       const word = buffer.slice(0, 4);
+//       buffer = buffer.slice(4);
 
-      if (!labelBuffers[label]) {
-        labelBuffers[label] = Buffer.alloc(0);
-      }
+//       const rawValue = word.readUInt32BE();
+//       const reversed = reverseBits32(rawValue);
+//       const label = (reversed >> 24) & 0xFF;
 
-      labelBuffers[label] = Buffer.concat([labelBuffers[label], word]);
+//       if (!labelBuffers[label]) {
+//         labelBuffers[label] = Buffer.alloc(0);
+//       }
 
-      if (labelBuffers[label].length >= 4) {
-        // Se você precisar de dados de ARINC, descomente esta linha
-        // processDataAsync(label, labelBuffers[label]).catch(console.error);
-        labelBuffers[label] = Buffer.alloc(0);
-      }
-    }
-  });
+//       labelBuffers[label] = Buffer.concat([labelBuffers[label], word]);
 
-  port.on('error', (err) => {
-    console.error('Erro na porta serial:', err.message);
-  });
-}
+//       if (labelBuffers[label].length >= 4) {
+//         // Se você precisar de dados de ARINC, descomente esta linha
+//         // processDataAsync(label, labelBuffers[label]).catch(console.error);
+//         labelBuffers[label] = Buffer.alloc(0);
+//       }
+//     }
+//   });
 
-async function listSerialPorts() {
-  return await SerialPort.list();
-}
+//   port.on('error', (err) => {
+//     console.error('Erro na porta serial:', err.message);
+//   });
+// }
 
-module.exports = {
-  openPort,
-  listSerialPorts,
-  setMainWindow
-};
+// async function listSerialPorts() {
+//   return await SerialPort.list();
+// }
+
+// module.exports = {
+//   openPort,
+//   listSerialPorts,
+//   setMainWindow
+// };
 
 
 
@@ -191,3 +213,153 @@ module.exports = {
 //   });
 // }
 // }
+
+
+const { SerialPort } = require('serialport');
+const mensagensLabel270 = require('./mensagensLabel270');
+const mensagensLabel271 = require('./mensagensLabel271');
+
+let mainWindow = null;
+let port = null;
+let buffer = Buffer.alloc(0);
+let labelBuffers = {};
+
+function setMainWindow(win) {
+  mainWindow = win;
+}
+
+function reverseBits32(n) {
+  let rev = 0;
+  for (let i = 0; i < 32; i++) {
+    rev <<= 1;
+    rev |= n & 1;
+    n >>>= 1;
+  }
+  return rev >>> 0;
+}
+
+function processBitwiseAlerts(label, dataBin, mensagens, canal) {
+  [...dataBin].forEach((bit, index) => {
+    if (bit === '1') {
+      const mensagem = mensagens[index];
+      if (mensagem && mainWindow?.webContents) {
+        mainWindow.webContents.send(canal, { bit: index, mensagem });
+      }
+    }
+  });
+}
+
+function dispatchAlertsIfNeeded(label, dataBin) {
+  if (label === 184) {
+    processBitwiseAlerts(label, dataBin, mensagensLabel270, 'label-270-alert');
+  } else if (label === 185) {
+    processBitwiseAlerts(label, dataBin, mensagensLabel271, 'label-271-alert');
+  }
+}
+
+function decodeAndSend(wordBuffer) {
+  const rawValue = wordBuffer.readUInt32BE();
+  const reversed = reverseBits32(rawValue);
+
+  const label = (reversed >> 24) & 0xFF;
+  const sdi = (reversed >> 22) & 0x03;
+  const dataField = (reversed >> 3) & 0x7FFFF;
+  const ssm = (reversed >> 1) & 0x03;
+  const parity = reversed & 0x01;
+
+  const labelBin = label.toString(2).padStart(8, '0');
+  const sdiBin = sdi.toString(2).padStart(2, '0');
+  const dataBin = dataField.toString(2).padStart(19, '0');
+  const ssmBin = ssm.toString(2).padStart(2, '0');
+  const parityBin = parity.toString(2);
+  const formattedBinary = `${parityBin} ${ssmBin} ${dataBin} ${sdiBin} ${labelBin}`;
+  const hex = dataField.toString(16).toUpperCase().padStart(6, '0');
+
+  let decimal = dataField;
+
+  dispatchAlertsIfNeeded(label, dataBin);
+
+  // Tratamento especial para labels 182 e 183 (octal 266 e 267)
+  if (label === 182 || label === 183) {
+    const unidadesBits = dataBin.slice(4, 8);
+    const dezenasBits = dataBin.slice(0, 4);
+
+    const unidades = parseInt(unidadesBits, 2);
+    const dezenas = parseInt(dezenasBits, 2);
+
+    decimal = dezenas * 10 + unidades;
+  }
+
+  if (mainWindow && mainWindow.webContents) {
+    mainWindow.webContents.send('decoded-data', {
+      label: label.toString(8).padStart(3, '0'),
+      labelBin,
+      sdi,
+      sdiBin,
+      data: dataField,
+      dataBin,
+      ssm,
+      ssmBin,
+      parity,
+      parityBin,
+      binary: formattedBinary,
+      hex,
+      decimal
+    });
+  }
+}
+
+function openPort(selectedPort) {
+  if (port && port.isOpen) {
+    port.close();
+  }
+
+  port = new SerialPort({
+    path: selectedPort,
+    baudRate: 115200
+  });
+
+  port.on('open', () => {
+    console.log('Porta serial aberta:', selectedPort);
+  });
+
+  port.on('data', (data) => {
+    buffer = Buffer.concat([buffer, data]);
+
+    while (buffer.length >= 4) {
+      const word = buffer.slice(0, 4);
+      buffer = buffer.slice(4);
+
+      decodeAndSend(word);
+    }
+  });
+
+  port.on('error', (err) => {
+    console.error('Erro na porta serial:', err.message);
+  });
+}
+
+async function listSerialPorts() {
+  // return await SerialPort.list();
+  try {
+    const ports = await SerialPort.list();  // Lista todas as portas seriais disponíveis
+    console.log('Portas serial disponíveis (serialManager):', ports);  // Log de portas
+    return ports;  // Retorna as portas encontradas
+  } catch (error) {
+    console.error('Erro ao listar portas:', error);
+    return [];  // Retorna um array vazio em caso de erro
+  }
+}
+
+
+module.exports = {
+  openPort,
+  listSerialPorts,
+  setMainWindow,
+  refreshSerialPorts: async () => {
+    const ports = await listSerialPorts();
+    if (mainWindow?.webContents) {
+      mainWindow.webContents.send('available-ports', ports);
+    }
+  }
+};
