@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld('serial', {
   requestPorts: () => ipcRenderer.invoke('request-ports'),
   onAvailablePorts: (callback) => ipcRenderer.on('available-ports', (event, ports) => callback(ports)),
   openSerialPort: (port) => ipcRenderer.invoke('serialport-open', port),
+  sendData: (data) => ipcRenderer.invoke('serialport-write', data)
   // openSerialPort: (port) => ipcRenderer.send('open-serial-port', port),
 });
 

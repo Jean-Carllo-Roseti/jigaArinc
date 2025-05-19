@@ -110,7 +110,7 @@ function openPort(selectedPort) {
     buffer = Buffer.concat([buffer, data]);
 
     while (buffer.length >= 4) {
-      const word = buffer.slice(0, 4);
+      const word = buffer.slice(0, 4).reverse(); // Inverte a ordem dos bytes para casar com o formato eniado, LSB.
       buffer = buffer.slice(4);
 
       decodeAndSend(word);
@@ -134,10 +134,21 @@ async function listSerialPorts() {
   }
 }
 
+function sendData(word) {
+  if (port && port.isOpen) {
+    const buffer = Buffer.alloc(4);
+    buffer.writeUInt32BE(word, 0);
+    port.write(buffer);
+    return true;
+  }
+  return false;
+}
+
 
 module.exports = {
   openPort,
   listSerialPorts,
+  sendData,
   setMainWindow,
   refreshSerialPorts: async () => {
     const ports = await listSerialPorts();

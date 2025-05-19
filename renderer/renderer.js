@@ -9,40 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
       '271': new Set()
   };
   const shownMessages = {};
-
-  // Função para conectar à porta selecionada
-  // connectButton.addEventListener('click', () => {
-  //   const selectedPort = portSelect.value;
-  //   if (selectedPort) {
-  //     window.serial.openSerialPort(selectedPort);
-  //   } else {
-  //     console.error('Nenhuma porta selecionada');
-  //   }
-  // });
-
-  // connectButton.addEventListener('click', async () => {
-  //   const selectedPort = portSelect.value;
-  //   if (selectedPort) {
-  //     try {
-  //       const result = await window.serial.openSerialPort(selectedPort);
-  //       console.log('Resultado da tentativa de conexão:', result); // Log do retorno da tentativa de conexão
-  
-  //       if (result.success) {
-  //         alert(result.message); // Conectado com sucesso
-  //         console.log(result.message); // Log de sucesso na conexão
-  //       } else {
-  //         alert(result.message); // Mostra o erro
-  //         console.log(result.message); // Log do erro
-  //       }
-  //     } catch (error) {
-  //       console.error('Erro inesperado ao tentar conectar:', error);
-  //       alert('Erro inesperado ao tentar conectar.');
-  //     }
-  //   } else {
-  //     console.error('Nenhuma porta selecionada');
-  //     alert('Por favor, selecione uma porta.');
-  //   }
-  // });
   
   connectButton.addEventListener('click', async () => {
     const selectedPort = portSelect.value;
@@ -64,6 +30,43 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       console.error('Nenhuma porta selecionada');
       alert('Por favor, selecione uma porta.');
+    }
+  });
+
+  // Adicione este código ANTES do final do DOMContentLoaded, junto com os outros listeners
+  document.getElementById('send-btn').addEventListener('click', async () => {
+    const row = document.querySelector('#send-table tbody tr');
+    
+    // Capturar bits dos campos
+    const parityBit = parseInt(row.querySelector('td:nth-child(1) input').value) || 0;
+    const ssmBits = parseInt(row.querySelector('td:nth-child(2) input').value) || 0;
+    const dataBits = row.querySelector('td:nth-child(3) input').value.padEnd(19, '0');
+    const sdiBits = parseInt(row.querySelector('td:nth-child(4) input').value) || 0;
+    const labelBits = row.querySelector('td:nth-child(5) input').value.padEnd(8, '0');
+
+    // Montar palavra de 32 bits
+    const arincWord = 
+      (parityBit << 31) |
+      (ssmBits << 29) |
+      (parseInt(dataBits, 2) << 8) |
+      (sdiBits << 6) |
+      parseInt(labelBits, 2);
+
+    // Dividir em 4 bytes (big-endian)
+    const byte3 = (arincWord >> 24) & 0xFF; // Bits 31-24
+    const byte2 = (arincWord >> 16) & 0xFF; // Bits 23-16
+    const byte1 = (arincWord >> 8) & 0xFF;  // Bits 15-8
+    const byte0 = arincWord & 0xFF;         // Bits 7-0
+
+    // Enviar bytes sequencialmente
+    try {
+      await window.serial.sendData(byte3);
+      await window.serial.sendData(byte2);
+      await window.serial.sendData(byte1);
+      await window.serial.sendData(byte0);
+      alert('Dados enviados com sucesso!');
+    } catch (error) {
+      alert('Erro no envio: ' + error.message);
     }
   });
   
@@ -145,9 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   });
 
-  // Solicita as portas ao iniciar
-  window.serial.requestPorts()
-      .catch(error => console.error("Erro ao carregar portas:", error));
+  // // Solicita as portas ao iniciar
+  // window.serial.requestPorts()
+  //     .catch(error => console.error("Erro ao carregar portas:", error));
 
   // Listener para seleção de porta
   portSelect.addEventListener('change', () => {

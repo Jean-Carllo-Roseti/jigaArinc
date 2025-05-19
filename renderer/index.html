@@ -45,12 +45,147 @@
                 <th class="decimal">Decimal</th>
               </tr>
             </thead>
-            <tbody>
-              <tr><td>134</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td></tr>
-              <tr><td>203</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td></tr>
-              <tr><td>213</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td></tr>
-              <tr><td>333</td><td><input type="text" /><td><input type="text" /><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td></tr>
-            </tbody>
+            <!-- <tbody>
+              <tr><td>134</td><td><input type="number"  /></td><td><input type="number"  /><td><input type="number"  /></td><td><input type="number"  /></td><td><input type="number"  /></td><td><input type="number"  /></td></tr>
+              <tr><td>203</td><td><input type="number"  /></td><td><input type="number"  /><td><input type="number"  /></td><td><input type="number"  /></td><td><input type="number"  /></td><td><input type="number"  /></td></tr>
+              <tr><td>213</td><td><input type="number"  /></td><td><input type="number"  /><td><input type="number"  /></td><td><input type="number"  /></td><td><input type="number"  /></td><td><input type="number"  /></td></tr>
+              <tr><td>333</td><td><input type="number"  /></td><td><input type="number"  /><td><input type="number"  /></td><td><input type="number"  /></td><td><input type="number"  /></td><td><input type="number" /></td></tr>
+            </tbody> -->
+             <tbody>
+                <tr>
+                  <td> <!-- Label octa -->
+                    <input type="number" class="bit-input" placeholder="134"
+                      oninput="this.value = this.value.slice(0,3)">
+                  </td>
+                        
+                  <td> <!-- Parity  -->
+                    <input type="number" class="bit-input" 
+                    oninput="this.value = this.value.slice(0, 1);"></td>
+                 
+                  <td>  <!-- SSM (2 bits) -->
+                    <input type="number"  class="bit-input" 
+                    oninput="this.value = this.value.slice(0,2);">
+                  </td>
+                  
+                  <td> <!-- Data (19 bits) -->
+                    <input type="number" class="bit-input"
+                     oninput="this.value = this.value.slice(0,19)">
+                  </td>
+                 
+                  <td>  <!-- SDI (2 bits) -->
+                    <input type="number"  class="bit-input"
+                      oninput="this.value = this.value.slice(0,2);">
+                  </td>
+                  
+                  <td> <!-- HEXA (8 bits) -->
+                    <input type="number" class="bit-input" 
+                      oninput="this.value = this.value.slice(0,8)">
+                  </td>
+                  <td>  <!-- Decimal = data -->
+                    <input type="number" class="bit-input" 
+                      oninput="this.value = this.value.slice(0,3)">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="number" class="bit-input" placeholder="203"
+                      oninput="this.value = this.value.slice(0,3)">
+                  </td>
+                  <!-- Parity (1 bit) -->
+                  <td><input type="number" class="bit-input" 
+                    oninput="this.value = this.value.slice(0, 1);"></td>
+                  <!-- SSM (2 bits) -->
+                  <td>
+                    <input type="number"  class="bit-input" 
+                    oninput="this.value = this.value.slice(0,2);">
+                  </td>
+                  <!-- Data (19 bits) -->
+                  <td>
+                    <input type="number" class="bit-input"
+                     oninput="this.value = this.value.slice(0,19)">
+                  </td>
+                  <!-- SDI (2 bits) -->
+                  <td>
+                    <input type="number"  class="bit-input"
+                      oninput="this.value = this.value.slice(0,2);">
+                  </td>
+                  <!-- Label (8 bits) -->
+                  <td>
+                    <input type="number" class="bit-input" 
+                      oninput="this.value = this.value.slice(0,8)">
+                  </td>
+                  <td>
+                    <input type="number" class="bit-input" 
+                      oninput="this.value = this.value.slice(0,3)">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="number" class="bit-input" placeholder="213"
+                      oninput="this.value = this.value.slice(0,3)">
+                  </td>
+                  <!-- Parity (1 bit) -->
+                  <td><input type="number" class="bit-input" 
+                    oninput="this.value = this.value.slice(0, 1);"></td>
+                  <!-- SSM (2 bits) -->
+                  <td>
+                    <input type="number"  class="bit-input" 
+                    oninput="this.value = this.value.slice(0,2);">
+                  </td>
+                  <!-- Data (19 bits) -->
+                  <td>
+                    <input type="number" class="bit-input"
+                     oninput="this.value = this.value.slice(0,19)">
+                  </td>
+                  <!-- SDI (2 bits) -->
+                  <td>
+                    <input type="number"  class="bit-input"
+                      oninput="this.value = this.value.slice(0,2);">
+                  </td>
+                  <!-- Label (8 bits) -->
+                  <td>
+                    <input type="number" class="bit-input" 
+                      oninput="this.value = this.value.slice(0,8)">
+                  </td>
+                  <td>
+                    <input type="number" class="bit-input" 
+                      oninput="this.value = this.value.slice(0,3)">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="number" class="bit-input" placeholder="333"
+                      oninput="this.value = this.value.slice(0,3)">
+                  </td>
+                  <!-- Parity (1 bit) -->
+                  <td><input type="number" class="bit-input" 
+                    oninput="this.value = this.value.slice(0, 1);"></td>
+                  <!-- SSM (2 bits) -->
+                  <td>
+                    <input type="number"  class="bit-input" 
+                    oninput="this.value = this.value.slice(0,2);">
+                  </td>
+                  <!-- Data (19 bits) -->
+                  <td>
+                    <input type="number" class="bit-input"
+                     oninput="this.value = this.value.slice(0,19)">
+                  </td>
+                  <!-- SDI (2 bits) -->
+                  <td>
+                    <input type="number"  class="bit-input"
+                      oninput="this.value = this.value.slice(0,2);">
+                  </td>
+                  <!-- Label (8 bits) -->
+                  <td>
+                    <input type="number" class="bit-input" 
+                      oninput="this.value = this.value.slice(0,8)">
+                  </td>
+                  <td>
+                    <input type="number" class="bit-input" 
+                      oninput="this.value = this.value.slice(0,3)">
+                  </td>
+                </tr>
+              </tbody>
           </table>
           <button class="send-btn" id="send-btn">Enviar</button>
         </div>

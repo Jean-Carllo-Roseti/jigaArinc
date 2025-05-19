@@ -59,7 +59,7 @@
     float: right;
   }
 
-  input[type="text"] {
+  input[type="number"] {
     width: 90%;
     padding: 4px;
     text-align: center;
@@ -127,3 +127,10 @@
     padding-left: 0.5rem;
   }
   
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+

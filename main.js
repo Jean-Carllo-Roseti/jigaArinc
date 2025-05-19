@@ -61,33 +61,10 @@ app.whenReady().then(async () => {
       }
     });
 
-    // ipcMain.handle('serialport-open', async (event, port) => {  // Alterado o nome da variável
-    //   try {
-    //     const serialPort = new SerialPort({ path: port, baudRate: 9600 });
-    //      // Log de SUCESSO
-    //     console.log(`Conectado com sucesso à porta ${portPath}`);
-        
-    //     // Aqui você pode armazenar o serialPort se quiser reutilizá-lo depois
-    //     return { success: true, message: `Conectado com sucesso à porta ${port}` };
-    //   } catch (error) {
-    //      // Log de erro
-    //     console.error(`Erro ao conectar à porta ${portPath}:`, error);
-    //     return { success: false, message: `Erro ao conectar: ${error.message}` };
-    //   }
-    // });
+    ipcMain.handle('serialport-write', (_, data) => {
+      return serialManager.sendData(data);
+    });
 
-    // ipcMain.handle('serialport-open', async (event, port) => {
-    //   console.log(`Tentando abrir a porta: ${port}`);  // Log adicional para verificar qual porta está sendo passada
-      
-    //   try {
-    //     const serialPort = new SerialPort({ path: port, baudRate: 9600 });
-    //     console.log(`Conectado com sucesso à porta ${port}`);
-    //     return { success: true, message: `Conectado com sucesso à porta ${port}` };
-    //   } catch (error) {
-    //     console.error(`Erro ao conectar à porta ${port}:`, error);
-    //     return { success: false, message: `Erro ao conectar: ${error.message}` };
-    //   }
-    // });
 
     ipcMain.handle('serialport-open', async (event, port) => {
       console.log(`Tentando abrir a porta: ${port}`);  // Log da tentativa
@@ -106,9 +83,6 @@ app.whenReady().then(async () => {
       }
     });
     
-    
-    
-
     ipcMain.on('selected-port', (_, port) => {
       console.log(`Tentando abrir a porta: ${port}`);
       serialManager.openPort(port)
@@ -123,7 +97,6 @@ app.whenReady().then(async () => {
     console.error('Erro ao iniciar o aplicativo:', err);
   }
 });
-
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
