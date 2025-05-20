@@ -41,14 +41,15 @@ function dispatchAlertsIfNeeded(label, dataBin) {
 }
 
 function decodeAndSend(wordBuffer) {
-  const rawValue = wordBuffer.readUInt32BE();
-  const reversed = reverseBits32(rawValue);
+  const rawValue = wordBuffer.readUInt32LE(0);
+  // const reversed = reverseBits32(rawValue);
+  // const rawValue = wordBuffer.readUInt32BE();
 
-  const label = (reversed >> 24) & 0xFF;
-  const sdi = (reversed >> 22) & 0x03;
-  const dataField = (reversed >> 3) & 0x7FFFF;
-  const ssm = (reversed >> 1) & 0x03;
-  const parity = reversed & 0x01;
+  const label = (rawValue >> 24) & 0xFF;
+  const sdi = (rawValue >> 22) & 0x03;
+  const dataField = (rawValue >> 3) & 0x7FFFF;
+  const ssm = (rawValue >> 1) & 0x03;
+  const parity = rawValue & 0x01;
 
   const labelBin = label.toString(2).padStart(8, '0');
   const sdiBin = sdi.toString(2).padStart(2, '0');
