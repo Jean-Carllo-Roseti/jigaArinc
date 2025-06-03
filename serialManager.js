@@ -138,13 +138,12 @@ async function listSerialPorts() {
 function sendData(word) {
   if (port && port.isOpen) {
     const buffer = Buffer.alloc(4);
-    buffer.writeUInt32BE(word, 0);
+    buffer.writeUInt32LE(word, 0); // Little-endian
     port.write(buffer);
     return true;
   }
   return false;
 }
-
 
 module.exports = {
   openPort,
